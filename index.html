@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RD Turns 20!!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700;1,900&family=Montserrat:wght@600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body { 
+            margin: 0; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; 
+            font-family: 'Montserrat', sans-serif;
+            background: radial-gradient(circle at 15% 50%, rgba(115, 85, 115, 0.25) 0%, transparent 50%),
+                        radial-gradient(circle at 85% 30%, rgba(90, 70, 100, 0.2) 0%, transparent 50%),
+                        linear-gradient(135deg, #0a0a0c 0%, #1a161d 40%, #080709 100%);
+            background-color: #050505;
+        }
+
+        #subPageFrame {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            border: none; display: none; opacity: 0; z-index: 2000;
+            transition: opacity 2.5s ease;
+        }
+
+        /* Moving Sawdust / Stardust */
+        .stardust {
+            position: absolute; background: rgba(255, 255, 255, 0.6); 
+            width: 2.5px; height: 2.5px; border-radius: 50%;
+            z-index: 2; animation: travel 25s infinite linear;
+        }
+        @keyframes travel { 
+            from { transform: translateX(-15vw); opacity: 0; } 
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            to { transform: translateX(115vw); opacity: 0; } 
+        }
+
+        .nebula-haze {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.2; z-index: 1; pointer-events: none;
+        }
+
+        .orb {
+            position: absolute; border-radius: 50%; background: #fff;
+            box-shadow: 0 0 10px #fff, 0 0 20px rgba(255, 255, 255, 0.8);
+            z-index: 2; animation: breathe 4s infinite ease-in-out alternate;
+        }
+        @keyframes breathe { 0% { transform: scale(0.8); opacity: 0.4; } 100% { transform: scale(1.2); opacity: 1; } }
+
+        .moon {
+            position: absolute; width: 14px; height: 14px;
+            border-radius: 50%; box-shadow: 3px 3px 0 0 #fff;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.8));
+            z-index: 3; animation: glisten 6s infinite ease-in-out alternate;
+        }
+        @keyframes glisten { 0% { transform: rotate(-20deg) scale(0.9); opacity: 0.4; } 100% { transform: rotate(15deg) scale(1.1); opacity: 0.9; } }
+
+        .star {
+            position: absolute; background: white;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            z-index: 5; animation: twinkle 3s infinite ease-in-out alternate;
+        }
+        @keyframes twinkle { 0% { opacity: 0.2; transform: scale(0.7); } 100% { opacity: 1; transform: scale(1.1); } }
+
+        .glow-line {
+            position: absolute; width: 1.5px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4), transparent);
+            z-index: 10;
+        }
+        .glow-ball {
+            position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+            width: 12px; height: 12px; background: #fff; border-radius: 50%;
+            box-shadow: 0 0 20px #fff, 0 0 35px rgba(255, 192, 203, 0.7);
+            animation: pulseBall 1.5s infinite alternate ease-in-out;
+        }
+
+        .container { position: relative; z-index: 100; text-align: center; width: 90%; max-width: 900px; transition: opacity 2s ease; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 2.6rem; color: #fff; margin-bottom: 40px; text-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        #unlockMessage { display: none; font-family: 'Dancing Script', cursive; font-size: 2.7rem; color: #fff; line-height: 1.6; text-shadow: 0 0 20px rgba(255, 255, 255, 0.6); }
+        .word { display: inline-block; white-space: nowrap; margin-right: 15px; }
+        .letter { display: inline-block; opacity: 0; transform: translateY(15px); filter: blur(5px); animation: sharpReveal 1.2s forwards; }
+        @keyframes sharpReveal { to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+        .btn { padding: 14px 45px; font-size: 1.1rem; border-radius: 50px; cursor: pointer; border: 1.5px solid rgba(255,255,255,0.4); background: rgba(0,0,0,0.4); color: #fff; transition: all 0.3s ease; font-weight: 600; }
+        .btn:hover { background: #fff; color: #000; box-shadow: 0 0 25px #fff; }
+    </style>
+</head>
+<body>
+
+    <iframe id="subPageFrame" src="https://wishes-all-the-way-to-you.my.canva.site"></iframe>
+
+    <div class="nebula-haze"></div>
+    
+    <div class="glow-line" style="height: 45vh; left: 10%; top: 0;"><div class="glow-ball"></div></div>
+    <div class="glow-line" style="height: 25vh; left: 25%; top: 0;"><div class="glow-ball"></div></div>
+    <div class="glow-line" style="height: 30vh; right: 25%; top: 0;"><div class="glow-ball"></div></div>
+    <div class="glow-line" style="height: 50vh; right: 10%; top: 0;"><div class="glow-ball"></div></div>
+
+    <div id="space-elements"></div>
+
+    <div class="container" id="mainUI">
+        <div id="contentBox">
+            <h1>Are you ready to step into your delightful 20's?</h1>
+            <button class="btn" id="yesBtn">Yes!</button>
+        </div>
+        <div id="unlockMessage"></div>
+    </div>
+
+    <audio id="initialMusic"><source src="https://files.catbox.moe/n3dmf1.mp3" type="audio/mpeg"></audio>
+    <audio id="secondSong" loop><source src="https://files.catbox.moe/ldkv4a.mp3" type="audio/mpeg"></audio>
+
+    <script>
+        const spaceContainer = document.getElementById('space-elements');
+        
+        function createElements(count, className, isOrb = false, isStar = false, isMoon = false, isSawdust = false) {
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div');
+                el.className = className;
+                
+                // Distribution
+                let x = (i % 2 === 0) ? (Math.random() * 32) : (68 + Math.random() * 32);
+                let y = Math.random() * 100;
+                
+                // Sawdust needs to spread across the whole screen for the flow effect
+                if(isSawdust) { x = Math.random() * 100; }
+
+                el.style.left = x + "vw";
+                el.style.top = y + "vh";
+
+                if (isOrb) {
+                    const size = (Math.random() * 5 + 3) + "px";
+                    el.style.width = size; el.style.height = size;
+                } else if (isStar) {
+                    const size = (Math.random() * 6 + 4) + "px";
+                    el.style.width = size; el.style.height = size;
+                } else if (isSawdust) {
+                    el.style.animationDelay = (Math.random() * -25) + "s";
+                }
+                spaceContainer.appendChild(el);
+            }
+        }
+
+        // Generate the universe
+        createElements(180, 'stardust', false, false, false, true); // MUCH sawdust
+        createElements(15, 'orb', true);
+        createElements(20, 'star', false, true);
+        createElements(4, 'moon', false, false, true);
+
+        const yesBtn = document.getElementById('yesBtn');
+        const initialMusic = document.getElementById('initialMusic');
+        const secondSong = document.getElementById('secondSong');
+        const fullText = "Woahh boy, the day of celebration has already dawned in! You have finally unlocked your braver version for the upcoming 20s. Enjoy your day to the fullest!";
+
+        yesBtn.addEventListener('click', function() {
+            initialMusic.play();
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            document.getElementById("contentBox").style.display = "none";
+            const messageContainer = document.getElementById("unlockMessage");
+            messageContainer.style.display = "block";
+            
+            let totalDelay = 0;
+            fullText.split(" ").forEach(word => {
+                const wordSpan = document.createElement("span");
+                wordSpan.className = "word";
+                word.split("").forEach(char => {
+                    const letter = document.createElement("span");
+                    letter.className = "letter";
+                    letter.textContent = char;
+                    letter.style.animationDelay = totalDelay + "s";
+                    wordSpan.appendChild(letter);
+                    totalDelay += 0.15;
+                });
+                messageContainer.appendChild(wordSpan);
+                totalDelay += 0.1;
+            });
+
+            setTimeout(() => {
+                const mainUI = document.getElementById('mainUI');
+                const subFrame = document.getElementById('subPageFrame');
+                mainUI.style.opacity = "0";
+
+                let fadeVolume = setInterval(() => {
+                    if (initialMusic.volume > 0.1) {
+                        initialMusic.volume -= 0.1;
+                    } else {
+                        initialMusic.pause();
+                        clearInterval(fadeVolume);
+                        secondSong.volume = 0;
+                        secondSong.play();
+                        let fadeIn = setInterval(() => {
+                            if (secondSong.volume < 1) { secondSong.volume += 0.1; } 
+                            else { clearInterval(fadeIn); }
+                        }, 200);
+                    }
+                }, 150);
+
+                setTimeout(() => {
+                    mainUI.style.display = "none";
+                    subFrame.style.display = "block";
+                    setTimeout(() => subFrame.style.opacity = "1", 100);
+                }, 2000);
+            }, (totalDelay * 1000) + 4000);
+        });
+    </script>
+</body>
+</html>
