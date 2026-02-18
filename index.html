@@ -24,6 +24,18 @@
             opacity: 0.2; z-index: 1; pointer-events: none;
         }
 
+        .orb {
+            position: absolute; border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            filter: blur(5px); z-index: 2;
+            animation: floatOrb 10s infinite ease-in-out alternate;
+        }
+
+        @keyframes floatOrb {
+            from { transform: translate(0, 0); opacity: 0.3; }
+            to { transform: translate(20px, -40px); opacity: 0.6; }
+        }
+
         .glow-line {
             position: absolute; width: 1.5px;
             background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4), transparent);
@@ -38,19 +50,16 @@
         }
 
         @keyframes pulseBall { 
-            from { opacity: 0.6; transform: translateX(-50%) scale(0.9); filter: brightness(1); } 
-            to { opacity: 1; transform: translateX(-50%) scale(1.3); filter: brightness(1.5); } 
+            from { opacity: 0.6; transform: translateX(-50%) scale(0.9); } 
+            to { opacity: 1; transform: translateX(-50%) scale(1.3); } 
         }
 
-        /* High Intensity Stardust */
         .stardust {
             position: absolute; background: rgba(255, 255, 255, 0.6); 
             width: 2.5px; height: 2.5px; border-radius: 50%;
             z-index: 2; animation: travel 30s infinite linear;
-            box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
         }
 
-        /* Bright Twinkling Stars */
         .star {
             position: absolute; background: white;
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
@@ -58,15 +67,26 @@
             filter: drop-shadow(0 0 8px #fff);
         }
 
-        @keyframes travel { from { transform: translateX(-10vw); } to { transform: translateX(110vw); } }
+        @keyframes travel { from { transform: translateX(-15vw); } to { transform: translateX(115vw); } }
         @keyframes twinkle { 
-            0% { opacity: 0.2; transform: scale(0.7); filter: brightness(1); } 
-            100% { opacity: 1; transform: scale(1.1); filter: brightness(1.8); } 
+            0% { opacity: 0.2; transform: scale(0.7); } 
+            100% { opacity: 1; transform: scale(1.1); } 
         }
 
         .container { position: relative; z-index: 100; text-align: center; width: 90%; max-width: 900px; }
 
-        h1 { font-family: 'Playfair Display', serif; font-size: 2.6rem; color: #fff; margin-bottom: 40px; }
+        h1 { 
+            font-family: 'Playfair Display', serif; font-size: 2.6rem; color: #fff; 
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.4);
+            -webkit-text-stroke: 0.5px rgba(255,255,255,0.5);
+            animation: floatText 4s infinite ease-in-out;
+        }
+
+        @keyframes floatText {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
 
         #unlockMessage { 
             display: none; font-family: 'Dancing Script', cursive; 
@@ -75,7 +95,6 @@
         }
 
         .word { display: inline-block; white-space: nowrap; margin-right: 15px; }
-        /* Dramatic reveal animation */
         .letter { display: inline-block; opacity: 0; transform: translateY(15px); filter: blur(5px); animation: sharpReveal 1.2s forwards; }
 
         @keyframes sharpReveal { to { opacity: 1; transform: translateY(0); filter: blur(0); } }
@@ -89,13 +108,16 @@
         }
         
         .btn:hover { background: #fff; color: #000; box-shadow: 0 0 25px #fff; }
-
         .btn.active-click { background: #fff !important; color: #000 !important; box-shadow: 0 0 40px #fff !important; }
     </style>
 </head>
 <body>
 
     <div class="nebula-haze"></div>
+
+    <div class="orb" style="width: 100px; height: 100px; top: 10%; left: 15%; animation-delay: 0s;"></div>
+    <div class="orb" style="width: 150px; height: 150px; bottom: 15%; right: 10%; animation-delay: -2s;"></div>
+    <div class="orb" style="width: 80px; height: 80px; top: 60%; left: 5%; animation-delay: -5s;"></div>
 
     <div class="glow-line" style="height: 45vh; left: 10%; top: 0;"><div class="glow-ball"></div></div>
     <div class="glow-line" style="height: 25vh; left: 25%; top: 0;"><div class="glow-ball"></div></div>
@@ -122,29 +144,34 @@
     <script>
         const container = document.getElementById('space-elements');
         
-        // Intensity maintained
-        for (let i = 0; i < 120; i++) {
-            const dust = document.createElement('div');
-            dust.className = 'stardust';
-            let y = Math.random() * 100;
-            if (y > 35 && y < 65) y = y < 50 ? y - 30 : y + 30;
-            dust.style.top = y + "vh";
-            dust.style.left = Math.random() * 100 + "vw";
-            dust.style.animationDelay = (Math.random() * -30) + "s";
-            container.appendChild(dust);
+        // BALANCED GENERATOR
+        function createStars(count, className, isStar = false) {
+            for (let i = 0; i < count; i++) {
+                const element = document.createElement('div');
+                element.className = className;
+                
+                // Force distribution: half on left, half on right
+                let xPercent = (i % 2 === 0) ? (Math.random() * 35) : (65 + Math.random() * 35);
+                let yPercent = Math.random() * 100;
+
+                element.style.left = xPercent + "vw";
+                element.style.top = yPercent + "vh";
+
+                if (isStar) {
+                    const size = (Math.random() * 7 + 7) + "px";
+                    element.style.width = size;
+                    element.style.height = size;
+                } else {
+                    element.style.animationDelay = (Math.random() * -30) + "s";
+                }
+                
+                container.appendChild(element);
+            }
         }
 
-        for (let i = 0; i < 18; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            const size = (Math.random() * 7 + 7) + "px";
-            star.style.width = size; star.style.height = size;
-            let y = Math.random() * 100;
-            if (y > 30 && y < 70) y = y < 50 ? y - 30 : y + 30;
-            star.style.top = y + "vh";
-            star.style.left = Math.random() * 100 + "vw";
-            container.appendChild(star);
-        }
+        // Increase density: 160 stardust particles and 24 bright stars
+        createStars(160, 'stardust');
+        createStars(24, 'star', true);
 
         const yesBtn = document.getElementById('yesBtn');
         const waitBtn = document.getElementById('waitBtn');
@@ -155,10 +182,7 @@
 
         yesBtn.addEventListener('click', function() {
             this.classList.add('active-click');
-            
-            // Starts IMMEDIATELY on click
-            audio.play().catch(e => console.log("Audio play failed:", e));
-            
+            audio.play().catch(e => console.log(e));
             confetti({ particleCount: 180, spread: 80, origin: { y: 0.7 }, colors: ['#ffffff', '#ffb6c1', '#ce93d8'] });
 
             setTimeout(() => {
@@ -167,7 +191,7 @@
                 messageContainer.style.display = "block";
                 
                 const words = fullText.split(" ");
-                let delay = 0; // Starts at 0 so first letter is instant
+                let delay = 0; 
                 words.forEach((wordText) => {
                     const wordSpan = document.createElement("span");
                     wordSpan.className = "word";
@@ -177,13 +201,11 @@
                         letterSpan.className = "letter";
                         letterSpan.style.animationDelay = delay + "s";
                         wordSpan.appendChild(letterSpan);
-                        delay += 0.15; // Slow unfolding speed
+                        delay += 0.15; 
                     });
                     messageContainer.appendChild(wordSpan);
                     delay += 0.1; 
                 });
-                
-                // Redirect stays at 20s or adjust to delay if needed
                 setTimeout(() => { window.location.href = "https://wishes-all-the-way-to-you.my.canva.site"; }, 25000);
             }, 300);
         });
