@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RD Turns 20!!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700;1,900&family=Montserrat:wght@600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body { 
+            margin: 0; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; 
+            font-family: 'Montserrat', sans-serif;
+            background: radial-gradient(circle at 15% 50%, rgba(115, 85, 115, 0.25) 0%, transparent 50%),
+                        radial-gradient(circle at 85% 30%, rgba(90, 70, 100, 0.2) 0%, transparent 50%),
+                        linear-gradient(135deg, #0a0a0c 0%, #1a161d 40%, #080709 100%);
+            background-color: #050505;
+        }
+
+        #subPageFrame {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            border: none; display: none; opacity: 0; z-index: 2000;
+            transition: opacity 2.5s ease;
+        }
+
+        /* INTENSIFIED SAWDUST FLOW */
+        .stardust {
+            position: absolute; background: rgba(255, 255, 255, 0.6); 
+            width: 1.8px; height: 1.8px; border-radius: 50%;
+            z-index: 2; animation: travel 15s infinite linear;
+        }
+        @keyframes travel { 
+            from { transform: translateX(-20vw); opacity: 0; } 
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            to { transform: translateX(120vw); opacity: 0; } 
+        }
+
+        /* SMALL INTENSIFIED ORBS */
+        .orb {
+            position: absolute; border-radius: 50%; background: #fff;
+            box-shadow: 0 0 8px #fff, 0 0 15px rgba(255, 255, 255, 0.5);
+            z-index: 2; animation: breathe 3s infinite ease-in-out alternate;
+        }
+        @keyframes breathe { 0% { transform: scale(0.4); opacity: 0.3; } 100% { transform: scale(1.1); opacity: 1; } }
+
+        .moon {
+            position: absolute; width: 14px; height: 14px;
+            border-radius: 50%; box-shadow: 3px 3px 0 0 #fff;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.8));
+            z-index: 3;
+        }
+
+        .star {
+            position: absolute; background: white;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            z-index: 5; animation: twinkle 3s infinite ease-in-out alternate;
+            filter: drop-shadow(0 0 8px #fff);
+        }
+        @keyframes twinkle { 0% { opacity: 0.2; transform: scale(0.7); } 100% { opacity: 1; transform: scale(1.1); } }
+
+        .glow-line {
+            position: absolute; width: 1.5px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4), transparent);
+            z-index: 10;
+        }
+        .glow-ball {
+            position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+            width: 10px; height: 10px; background: #fff; border-radius: 50%;
+            box-shadow: 0 0 20px #fff;
+        }
+
+        /* FLOATING & GLOWING UI */
+        .container { position: relative; z-index: 1000; text-align: center; width: 90%; max-width: 900px; transition: opacity 2s ease; }
+        
+        h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 2.8rem; 
+            color: #fff; 
+            margin-bottom: 40px; 
+            animation: float 4s infinite ease-in-out, glowPulse 3s infinite alternate;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes glowPulse {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 0 0 20px #fff, 0 0 40px rgba(255, 182, 255, 0.8), 0 0 10px #fff; }
+        }
+
+        #unlockMessage { display: none; font-family: 'Dancing Script', cursive; font-size: 2.7rem; color: #fff; line-height: 1.6; }
+        
+        .word { display: inline-block; white-space: nowrap; margin-right: 15px; }
+        .letter { display: inline-block; opacity: 0; transform: translateY(15px); animation: sharpReveal 1.2s forwards; }
+        @keyframes sharpReveal { to { opacity: 1; transform: translateY(0); } }
+
+        .btn-group { display: flex; justify-content: center; gap: 20px; }
+        .btn { 
+            padding: 14px 45px; font-size: 1.1rem; border-radius: 50px; cursor: pointer; 
+            border: 1.5px solid #fff; background: rgba(0,0,0,0.4); color: #fff; 
+            transition: all 0.3s ease; font-weight: 600;
+        }
+        .btn:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
+    </style>
+</head>
+<body>
+
+    <iframe id="subPageFrame" src="https://wishes-all-the-way-to-you.my.canva.site"></iframe>
+
+    <div id="space-elements"></div>
+
+    <div class="glow-line" style="height: 40vh; left: 10%; top: 0;"><div class="glow-ball"></div></div>
+    <div class="glow-line" style="height: 25vh; left: 25%; top: 0;"><div class="glow-ball"></div></div>
+    <div class="glow-line" style="height: 35vh; right: 25%; top: 0;"><div class="glow-ball"></div></div>
+    <div class="glow-line" style="height: 50vh; right: 10%; top: 0;"><div class="glow-ball"></div></div>
+
+    <div class="container" id="mainUI">
+        <div id="contentBox">
+            <h1>Are you ready to step into your delightful 20's?</h1>
+            <div class="btn-group">
+                <button class="btn" id="yesBtn">Yes!</button>
+                <button class="btn" id="waitBtn">Wait..</button>
+            </div>
+        </div>
+        <div id="unlockMessage"></div>
+    </div>
+
+    <audio id="initialMusic"><source src="https://files.catbox.moe/n3dmf1.mp3" type="audio/mpeg"></audio>
+    <audio id="secondSong" loop><source src="https://files.catbox.moe/ldkv4a.mp3" type="audio/mpeg"></audio>
+
+    <script>
+        const space = document.getElementById('space-elements');
+        
+        function createElements(count, className, isOrb = false, isStar = false, isSawdust = false) {
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div');
+                el.className = className;
+                let x = (i % 2 === 0) ? (Math.random() * 32) : (68 + Math.random() * 32);
+                if(isSawdust) x = Math.random() * 100;
+                
+                el.style.left = x + "vw";
+                el.style.top = Math.random() * 100 + "vh";
+
+                if (isOrb) {
+                    const s = (Math.random() * 3 + 2) + "px"; 
+                    el.style.width = s; el.style.height = s;
+                } else if (isStar) {
+                    const s = (Math.random() * 6 + 4) + "px";
+                    el.style.width = s; el.style.height = s;
+                }
+                el.style.animationDelay = (Math.random() * -20) + "s";
+                space.appendChild(el);
+            }
+        }
+
+        // GENERATE INTENSE UNIVERSE
+        createElements(450, 'stardust', false, false, true); // MUCH MORE SAWDUST
+        createElements(150, 'orb', true); // INTENSE ORBS
+        createElements(25, 'star', false, true); // STARS
+        
+        for(let i=0; i<4; i++){
+            const moon = document.createElement('div');
+            moon.className = 'moon';
+            moon.style.left = (i*25 + 5) + "vw"; moon.style.top = (Math.random()*80) + "vh";
+            space.appendChild(moon);
+        }
+
+        const yesBtn = document.getElementById('yesBtn');
+        const initialMusic = document.getElementById('initialMusic');
+        const secondSong = document.getElementById('secondSong');
+        const fullText = "Woahh boy, the day of celebration has already dawned in! You have finally unlocked your braver version for the upcoming 20s. Enjoy your day to the fullest!";
+
+        yesBtn.addEventListener('click', function() {
+            initialMusic.play();
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            document.getElementById("contentBox").style.display = "none";
+            const msgBox = document.getElementById("unlockMessage");
+            msgBox.style.display = "block";
+            
+            let delay = 0;
+            fullText.split(" ").forEach(word => {
+                const wSpan = document.createElement("span");
+                wSpan.className = "word";
+                word.split("").forEach(char => {
+                    const lSpan = document.createElement("span");
+                    lSpan.className = "letter";
+                    lSpan.textContent = char;
+                    lSpan.style.animationDelay = delay + "s";
+                    wSpan.appendChild(lSpan);
+                    delay += 0.12;
+                });
+                msgBox.appendChild(wSpan);
+                delay += 0.05;
+            });
+
+            setTimeout(() => {
+                document.getElementById('mainUI').style.opacity = "0";
+                
+                let fadeOut = setInterval(() => {
+                    if (initialMusic.volume > 0.1) {
+                        initialMusic.volume -= 0.1;
+                    } else {
+                        initialMusic.pause();
+                        clearInterval(fadeOut);
+                        secondSong.play(); 
+                    }
+                }, 150);
+
+                setTimeout(() => {
+                    document.getElementById('mainUI').style.display = "none";
+                    const frame = document.getElementById('subPageFrame');
+                    frame.style.display = "block";
+                    setTimeout(() => frame.style.opacity = "1", 100);
+                }, 2000);
+            }, (delay * 1000) + 4000);
+        });
+
+        document.getElementById('waitBtn').addEventListener('mouseover', function() {
+            this.style.position = 'absolute';
+            this.style.left = Math.random() * 80 + '%';
+            this.style.top = Math.random() * 80 + '%';
+        });
+    </script>
+</body>
+</html>
