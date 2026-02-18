@@ -9,174 +9,183 @@
     
     <style>
         body { 
-            background: radial-gradient(circle at center, #1b140d 0%, #050505 100%);
-            margin: 0; 
-            overflow: hidden; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-            font-family: 'Montserrat', sans-serif; 
+            margin: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; height: 100vh; 
+            font-family: 'Montserrat', sans-serif;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(115, 85, 115, 0.25) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(90, 70, 100, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a0c 0%, #1a161d 40%, #080709 100%);
+            background-color: #050505;
         }
 
-        /* Vertical Cinematic Glows */
-        .light-streak {
-            position: absolute;
-            width: 1px;
-            height: 100%;
-            background: linear-gradient(to bottom, transparent, #d4a373, transparent);
-            opacity: 0.2;
-            box-shadow: 0 0 15px #d4a373;
-            z-index: 1;
+        .nebula-haze {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.2; z-index: 1; pointer-events: none;
         }
 
-        /* Floating Golden Particles */
-        .particle {
-            position: absolute;
-            background: #ffd700;
-            border-radius: 50%;
-            opacity: 0.3;
-            filter: blur(2px);
-            animation: floatParticle 10s infinite linear;
+        .glow-line {
+            position: absolute; width: 1.5px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4), transparent);
+            z-index: 10;
         }
 
-        @keyframes floatParticle {
-            0% { transform: translateY(100vh) translateX(0); }
-            100% { transform: translateY(-10vh) translateX(20px); }
+        .glow-ball {
+            position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+            width: 12px; height: 12px; background: #fff; border-radius: 50%;
+            box-shadow: 0 0 20px #fff, 0 0 35px rgba(255, 192, 203, 0.7);
+            animation: pulseBall 1.5s infinite alternate ease-in-out;
         }
 
-        .bg-icon { 
-            position: absolute; 
-            opacity: 0.7; 
-            z-index: 2; 
-            color: #ffd700;
-            filter: drop-shadow(0 0 20px #d4a373);
-            animation: floatSlow 6s ease-in-out infinite; 
+        @keyframes pulseBall { 
+            from { opacity: 0.6; transform: translateX(-50%) scale(0.9); filter: brightness(1); } 
+            to { opacity: 1; transform: translateX(-50%) scale(1.3); filter: brightness(1.5); } 
         }
 
-        @keyframes floatSlow { 
-            0%, 100% { transform: translateY(0) rotate(0deg); } 
-            50% { transform: translateY(-30px) rotate(15deg); } 
+        /* High Intensity Stardust */
+        .stardust {
+            position: absolute; background: rgba(255, 255, 255, 0.6); 
+            width: 2.5px; height: 2.5px; border-radius: 50%;
+            z-index: 2; animation: travel 30s infinite linear;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
         }
 
-        .container { 
-            position: relative; 
-            z-index: 10; 
-            text-align: center; 
-            width: 90%;
-            max-width: 900px; 
+        /* Bright Twinkling Stars */
+        .star {
+            position: absolute; background: white;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            z-index: 5; animation: twinkle 3s infinite ease-in-out alternate;
+            filter: drop-shadow(0 0 8px #fff);
         }
 
-        h1 { 
-            font-family: 'Playfair Display', serif; 
-            font-size: 3.2rem; 
-            color: #fdf5e6; 
-            margin-bottom: 40px; 
-            text-shadow: 0 0 30px rgba(212, 163, 115, 0.6);
+        @keyframes travel { from { transform: translateX(-10vw); } to { transform: translateX(110vw); } }
+        @keyframes twinkle { 
+            0% { opacity: 0.2; transform: scale(0.7); filter: brightness(1); } 
+            100% { opacity: 1; transform: scale(1.1); filter: brightness(1.8); } 
         }
+
+        .container { position: relative; z-index: 100; text-align: center; width: 90%; max-width: 900px; }
+
+        h1 { font-family: 'Playfair Display', serif; font-size: 2.6rem; color: #fff; margin-bottom: 40px; }
 
         #unlockMessage { 
-            display: none; 
-            font-family: 'Dancing Script', cursive; 
-            font-size: 2.8rem; 
-            color: #fdf5e6; 
-            line-height: 1.5; 
-            text-shadow: 0 0 10px rgba(212, 163, 115, 0.5);
+            display: none; font-family: 'Dancing Script', cursive; 
+            font-size: 2.7rem; color: #fff; line-height: 1.6; 
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(200, 150, 200, 0.4);
         }
 
         .word { display: inline-block; white-space: nowrap; margin-right: 15px; }
+        /* Dramatic reveal animation */
+        .letter { display: inline-block; opacity: 0; transform: translateY(15px); filter: blur(5px); animation: sharpReveal 1.2s forwards; }
 
-        .letter { 
-            display: inline-block; 
-            opacity: 0; 
-            transform: scale(0.5) translateY(20px); 
-            filter: blur(10px);
-            animation: magicReveal 1s cubic-bezier(0.2, 1, 0.3, 1) forwards; 
-        }
+        @keyframes sharpReveal { to { opacity: 1; transform: translateY(0); filter: blur(0); } }
 
-        @keyframes magicReveal { 
-            to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); } 
-        }
-
-        .btn-group { display: flex; gap: 25px; justify-content: center; }
-        
+        .btn-group { display: flex; justify-content: center; gap: 20px; }
         .btn { 
-            padding: 15px 45px; 
-            font-size: 1.1rem; 
-            font-weight: 600; 
-            border-radius: 50px; 
-            cursor: pointer; 
-            transition: 0.4s; 
-            text-transform: uppercase; 
-            border: none;
+            padding: 14px 45px; font-size: 1.1rem; border-radius: 50px; cursor: pointer; 
+            border: 1.5px solid rgba(255,255,255,0.4); background: rgba(0,0,0,0.4); color: #fff; 
+            transition: all 0.3s ease; text-transform: uppercase; font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
         }
+        
+        .btn:hover { background: #fff; color: #000; box-shadow: 0 0 25px #fff; }
 
-        .yes { background: linear-gradient(135deg, #d4a373, #faedcd); color: #3d2b1f; box-shadow: 0 10px 40px rgba(212, 163, 115, 0.4); }
-        .no { background: rgba(255,255,255,0.05); color: #d4a373; border: 1px solid rgba(212,163,115,0.3); backdrop-filter: blur(10px); }
-        .btn:hover { transform: scale(1.1); }
+        .btn.active-click { background: #fff !important; color: #000 !important; box-shadow: 0 0 40px #fff !important; }
     </style>
 </head>
 <body>
 
-    <div class="light-streak" style="left: 20%;"></div>
-    <div class="light-streak" style="right: 20%;"></div>
+    <div class="nebula-haze"></div>
 
-    <div class="particle" style="width: 5px; height: 5px; left: 10%; animation-delay: 1s;"></div>
-    <div class="particle" style="width: 3px; height: 3px; left: 80%; animation-delay: 3s;"></div>
-    <div class="particle" style="width: 4px; height: 4px; left: 50%; animation-delay: 5s;"></div>
+    <div class="glow-line" style="height: 45vh; left: 10%; top: 0;"><div class="glow-ball"></div></div>
+    <div class="glow-line" style="height: 25vh; left: 25%; top: 0;"><div class="glow-ball"></div></div>
+    <div class="glow-line" style="height: 30vh; right: 25%; top: 0;"><div class="glow-ball"></div></div>
+    <div class="glow-line" style="height: 50vh; right: 10%; top: 0;"><div class="glow-ball"></div></div>
 
-    <div class="bg-icon" style="top: 10%; left: 10%; font-size: 60px;">✨</div>
-    <div class="bg-icon" style="top: 20%; right: 15%; font-size: 50px;">🎹</div>
-    <div class="bg-icon" style="bottom: 15%; left: 15%; font-size: 55px;">🎂</div>
-    <div class="bg-icon" style="bottom: 10%; right: 10%; font-size: 65px;">🎉</div>
+    <div id="space-elements"></div>
 
     <div class="container">
         <div id="contentBox">
             <h1>Are you ready to step into your delightful 20's?</h1>
             <div class="btn-group">
-                <button class="btn yes" id="yesBtn">Yes!</button>
-                <button class="btn no" onclick="alert('Wait...')">Wait...</button>
+                <button class="btn" id="yesBtn">Yes!</button>
+                <button class="btn" id="waitBtn">Wait..</button>
             </div>
         </div>
         <div id="unlockMessage"></div>
     </div>
 
-    <audio id="bdayMusic" preload="auto" crossorigin="anonymous">
+    <audio id="bdayMusic">
         <source src="https://files.catbox.moe/n3dmf1.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        const fullText = "Woahh boy, the day of celebration has already dawned in! You have finally unlocked your braver version for the upcoming 20s. Enjoy your day to the fullest! Proud to have a brother like you...";
+        const container = document.getElementById('space-elements');
+        
+        // Intensity maintained
+        for (let i = 0; i < 120; i++) {
+            const dust = document.createElement('div');
+            dust.className = 'stardust';
+            let y = Math.random() * 100;
+            if (y > 35 && y < 65) y = y < 50 ? y - 30 : y + 30;
+            dust.style.top = y + "vh";
+            dust.style.left = Math.random() * 100 + "vw";
+            dust.style.animationDelay = (Math.random() * -30) + "s";
+            container.appendChild(dust);
+        }
+
+        for (let i = 0; i < 18; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = (Math.random() * 7 + 7) + "px";
+            star.style.width = size; star.style.height = size;
+            let y = Math.random() * 100;
+            if (y > 30 && y < 70) y = y < 50 ? y - 30 : y + 30;
+            star.style.top = y + "vh";
+            star.style.left = Math.random() * 100 + "vw";
+            container.appendChild(star);
+        }
+
         const yesBtn = document.getElementById('yesBtn');
+        const waitBtn = document.getElementById('waitBtn');
         const audio = document.getElementById('bdayMusic');
+        const fullText = "Woahh boy, the day of celebration has already dawned in! You have finally unlocked your braver version for the upcoming 20s. Enjoy your day to the fullest!";
+
+        waitBtn.addEventListener('click', () => { alert("Something bigger waits bhidu!"); });
 
         yesBtn.addEventListener('click', function() {
-            audio.play().catch(e => {});
-            confetti({ particleCount: 300, spread: 160, origin: { y: 0.6 }, colors: ['#d4a373', '#ffffff', '#ffd700'] });
-
-            document.getElementById("contentBox").style.display = "none";
-            const messageContainer = document.getElementById("unlockMessage");
-            messageContainer.style.display = "block";
+            this.classList.add('active-click');
             
-            const words = fullText.split(" ");
-            let delay = 0;
+            // Starts IMMEDIATELY on click
+            audio.play().catch(e => console.log("Audio play failed:", e));
+            
+            confetti({ particleCount: 180, spread: 80, origin: { y: 0.7 }, colors: ['#ffffff', '#ffb6c1', '#ce93d8'] });
 
-            words.forEach((wordText) => {
-                const wordSpan = document.createElement("span");
-                wordSpan.className = "word";
-                wordText.split("").forEach((char) => {
-                    const letterSpan = document.createElement("span");
-                    letterSpan.textContent = char;
-                    letterSpan.className = "letter";
-                    letterSpan.style.animationDelay = `${delay}s`;
-                    wordSpan.appendChild(letterSpan);
-                    delay += 0.08;
+            setTimeout(() => {
+                document.getElementById("contentBox").style.display = "none";
+                const messageContainer = document.getElementById("unlockMessage");
+                messageContainer.style.display = "block";
+                
+                const words = fullText.split(" ");
+                let delay = 0; // Starts at 0 so first letter is instant
+                words.forEach((wordText) => {
+                    const wordSpan = document.createElement("span");
+                    wordSpan.className = "word";
+                    wordText.split("").forEach((char) => {
+                        const letterSpan = document.createElement("span");
+                        letterSpan.textContent = char;
+                        letterSpan.className = "letter";
+                        letterSpan.style.animationDelay = delay + "s";
+                        wordSpan.appendChild(letterSpan);
+                        delay += 0.15; // Slow unfolding speed
+                    });
+                    messageContainer.appendChild(wordSpan);
+                    delay += 0.1; 
                 });
-                messageContainer.appendChild(wordSpan);
-                delay += 0.1; 
-            });
-
-            setTimeout(() => { window.location.href = "https://wishes-all-the-way-to-you.my.canva.site"; }, 20000);
+                
+                // Redirect stays at 20s or adjust to delay if needed
+                setTimeout(() => { window.location.href = "https://wishes-all-the-way-to-you.my.canva.site"; }, 25000);
+            }, 300);
         });
     </script>
 </body>
